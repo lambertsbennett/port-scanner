@@ -9,4 +9,4 @@ port_scanner 127.0.0.1
 
 TODO: 
 - Add tokio for concurrency/signal handling.
-- Switch to socket2 to send SYN signals instead of establishing a full connection.
+- Switch to socket2 or pnet to send SYN signals instead of establishing a full connection.
