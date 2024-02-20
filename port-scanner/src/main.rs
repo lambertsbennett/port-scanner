@@ -1,22 +1,14 @@
-use std::net::TcpStream;
-use port_scanner::ThreadPool;
+use port_scanner::{check_port, PortResult};
+use std::error::Error;
 
-fn main() {
+
+#[tokio::main]
+async fn main() -> Result<(), Box<dyn Error>> {
+
     let host: &str = "127.0.0.1";
-    let pool = ThreadPool::new(12);
-
-    for p in 1..65536
-    {
+    for p in 1..65536 {
         let query: String = [&host, ":", &p.to_string()].join("");
-        
-        pool.execute(move || {
-            check_port(&query);
-        });
+        tokio::spawn( async move {let _ = check_port(&query).await;} );
     }
-}
-
-fn check_port(query: &str){
-    if let Ok(_stream) = TcpStream::connect(query) {
-        println!("{} is open!", query);
-    } else {}
+    Ok(())
 }
