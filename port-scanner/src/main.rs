@@ -1,4 +1,4 @@
-use port_scanner::{check_port, ping_host};
+use port_scanner::check_port;
 use std::fmt;
 use std::env;
 use std::error::Error;
@@ -22,9 +22,6 @@ impl Error for ArgParseError {}
 async fn main() -> Result<()> {
 
     let target = env::args().nth(1).ok_or(ArgParseError{message: String::from("No Arguments Provided!")})?;
-    let ping_target = target.clone();
-    let handle = tokio::spawn( async move { let _ = ping_host(&ping_target).await; } );
-    let _out = handle.await?;
     for p in 1..65536 {
         let query: String = [&target, ":", &p.to_string()].join("");
         tokio::spawn( async move { check_port(&query).await; } );
